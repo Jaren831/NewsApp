@@ -11,13 +11,18 @@ public class Article {
     //Url for article
     private String mUrl;
 
+    //Topic for the article
+    private String mTopic;
+
     /**
      * @param title is the title of the article.
      * @param url is the url of the article.
+     * @param topic is the topic of the article.
      */
-    public Article(String title, String url) {
+    public Article(String title, String url, String topic) {
         mTitle = title;
         mUrl = url;
+        mTopic  = topic;
     }
 
     /**
@@ -34,4 +39,10 @@ public class Article {
         return mUrl;
     }
 
+    /**
+     * @return the topic of the article
+     */
+    public String getTopic() {
+        return mTopic;
+    }
 }

@@ -142,15 +142,15 @@ public class QueryUtils {
 
             //Extract tje JSON Array associated with the key called "response",
             // which represents a list of the top articles.
-            JSONArray jsonArray = jsonRootObject.optJSONArray("response");
+            JSONObject jsonObject = jsonRootObject.optJSONObject("response");
+            JSONArray jsonArray = jsonObject.optJSONArray("editorsPicks");
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject currentArticle = jsonArray.getJSONObject(i);
-                JSONObject editorPicks = currentArticle.getJSONObject("editorsPicks");
-
-                String title = editorPicks.optString("webTitle");
-                String url = editorPicks.optString("webUrl");
-                articles.add(new Article(title, url));
+                String title = currentArticle.optString("webTitle");
+                String url = currentArticle.optString("webUrl");
+                String topic = currentArticle.optString("sectionName");
+                articles.add(new Article(title, url, topic));
             }
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Problem parsing the article JSON results");

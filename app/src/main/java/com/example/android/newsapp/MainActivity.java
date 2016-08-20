@@ -8,7 +8,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -42,6 +44,9 @@ public class MainActivity extends AppCompatActivity
     /** Spinner to show loading progress */
     ProgressBar progressBar;
 
+    /**Swipe refresh */
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,8 +68,10 @@ public class MainActivity extends AppCompatActivity
         //Set progress bar to loading spinner.
         progressBar = (ProgressBar) findViewById(R.id.loading_spinner);
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+
         //Get a reference to the LoaderManager, in order to interact with loaders.
-        LoaderManager loaderManager = getLoaderManager();
+        final LoaderManager loaderManager = getLoaderManager();
 
         //Create instance of connectivity manager object.
         ConnectivityManager cm =
@@ -75,7 +82,7 @@ public class MainActivity extends AppCompatActivity
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         if (isConnected) {
-            loaderManager.initLoader(ARTICLE_LOADER_ID, null, this);
+            loaderManager.initLoader(ARTICLE_LOADER_ID, null, MainActivity.this);
         } else {
             progressBar.setVisibility(View.GONE);
             emptyTextView.setText(R.string.no_internet);
@@ -95,6 +102,16 @@ public class MainActivity extends AppCompatActivity
 
                 //Send the intent to launch a new activity.
                 startActivity(websiteIntent);
+            }
+        });
+
+        //Implements pull down to refresh gesture.
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh () {
+                Log.i(LOG_TAG, "onRefresh called from SwipeRefreshLayout");
+                loaderManager.initLoader(ARTICLE_LOADER_ID, null, MainActivity.this);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -117,4 +134,5 @@ public class MainActivity extends AppCompatActivity
     public void onLoaderReset(Loader<List<Article>> loader) {
         mAdapter.clear();
     }
+
 }
