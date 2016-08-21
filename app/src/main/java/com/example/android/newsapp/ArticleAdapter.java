@@ -31,9 +31,14 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         titleTextView.setText(currentArticle.getTitle());
 
         //Find the TextView with id topic.
-        TextView topicTextView = (TextView) listItemView.findViewById(R.id.topic);
-        //Display the article topic in Textview topic.
+        TextView topicTextView = (TextView) listItemView.findViewById(R.id.article_topic);
+        //Display the article topic in TextView article_topic.
         topicTextView.setText(currentArticle.getTopic());
+
+        //Find the TextView with id article_author
+        TextView authorTextView = (TextView) listItemView.findViewById(R.id.article_author);
+        //Display the article author in TextView article_author
+        authorTextView.setText(currentArticle.getAuthor());
 
         return listItemView;
     }
